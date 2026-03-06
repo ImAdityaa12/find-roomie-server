@@ -194,46 +194,52 @@ export const verification = pgTable("verification", {
 // USER PREFERENCES
 // ─────────────────────────────────────────
 
-export const userPreferences = pgTable("user_preferences", {
-  id:               text("id").primaryKey(),
-  userId:           text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" })
-    .unique(),
+export const userPreferences = pgTable(
+  "user_preferences",
+  {
+    id:               text("id").primaryKey(),
+    userId:           text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" })
+      .unique(),
 
-  // Location
-  city:             text("city").notNull(),
-  locality:         text("locality"),
-  lat:              real("lat"),
-  lng:              real("lng"),
+    // Location
+    city:             text("city").notNull(),
+    locality:         text("locality"),
+    lat:              real("lat"),
+    lng:              real("lng"),
 
-  // Budget (in ₹)
-  budgetMin:        integer("budget_min").notNull(),
-  budgetMax:        integer("budget_max").notNull(),
+    // Budget (in ₹)
+    budgetMin:        integer("budget_min").notNull(),
+    budgetMax:        integer("budget_max").notNull(),
 
-  // Timing
-  moveInDate:       date("move_in_date"),
-  leaseDuration:    leaseDurationEnum("lease_duration").default("flexible"),
+    // Timing
+    moveInDate:       date("move_in_date"),
+    leaseDuration:    leaseDurationEnum("lease_duration").default("flexible"),
 
-  // Lifestyle
-  workSchedule:     workScheduleEnum("work_schedule").default("flexible"),
-  sleepSchedule:    sleepScheduleEnum("sleep_schedule").default("flexible"),
-  cleanliness:      cleanlinessEnum("cleanliness").default("moderate"),
-  guestPolicy:      guestPolicyEnum("guest_policy").default("sometimes"),
-  vegPreference:    vegPreferenceEnum("veg_preference").default("both"),
+    // Lifestyle
+    workSchedule:     workScheduleEnum("work_schedule").default("flexible"),
+    sleepSchedule:    sleepScheduleEnum("sleep_schedule").default("flexible"),
+    cleanliness:      cleanlinessEnum("cleanliness").default("moderate"),
+    guestPolicy:      guestPolicyEnum("guest_policy").default("sometimes"),
+    vegPreference:    vegPreferenceEnum("veg_preference").default("both"),
 
-  // Habits
-  smoking:          boolean("smoking").notNull().default(false),
-  drinking:         boolean("drinking").notNull().default(false),
-  petsAllowed:      boolean("pets_allowed").notNull().default(false),
+    // Habits
+    smoking:          boolean("smoking").notNull().default(false),
+    drinking:         boolean("drinking").notNull().default(false),
+    petsAllowed:      boolean("pets_allowed").notNull().default(false),
 
-  // Roommate preference
-  genderPreference: genderPreferenceEnum("gender_preference").default("any"),
-  ageMin:           integer("age_min").default(18),
-  ageMax:           integer("age_max").default(40),
+    // Roommate preference
+    genderPreference: genderPreferenceEnum("gender_preference").default("any"),
+    ageMin:           integer("age_min").default(18),
+    ageMax:           integer("age_max").default(40),
 
-  updatedAt:        timestamp("updated_at").defaultNow().notNull(),
-});
+    updatedAt:        timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()).notNull(),
+  },
+  (t) => [
+    index("prefs_city_idx").on(t.city),
+  ]
+);
 
 // ─────────────────────────────────────────
 // ROOM LISTINGS
@@ -274,13 +280,13 @@ export const roomListings = pgTable(
     availableFrom: date("available_from"),
     isActive:     boolean("is_active").notNull().default(true),
     createdAt:    timestamp("created_at").defaultNow().notNull(),
-    updatedAt:    timestamp("updated_at").defaultNow().notNull(),
+    updatedAt:    timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()).notNull(),
   },
-  (t) => ({
-    userIdx:   index("listings_user_idx").on(t.userId),
-    cityIdx:   index("listings_city_idx").on(t.city),
-    activeIdx: index("listings_active_idx").on(t.isActive),
-  })
+  (t) => [
+    index("listings_user_idx").on(t.userId),
+    index("listings_city_idx").on(t.city),
+    index("listings_active_idx").on(t.isActive),
+  ]
 );
 
 // ─────────────────────────────────────────
@@ -309,11 +315,11 @@ export const compatibilityScores = pgTable(
                   }>(),
     calculatedAt: timestamp("calculated_at").defaultNow().notNull(),
   },
-  (t) => ({
-    uniquePair: uniqueIndex("scores_unique_pair_idx").on(t.userAId, t.userBId),
-    userAIdx:   index("scores_user_a_idx").on(t.userAId),
-    scoreIdx:   index("scores_score_idx").on(t.score),
-  })
+  (t) => [
+    uniqueIndex("scores_unique_pair_idx").on(t.userAId, t.userBId),
+    index("scores_user_a_idx").on(t.userAId),
+    index("scores_score_idx").on(t.score),
+  ]
 );
 
 // ─────────────────────────────────────────
@@ -332,14 +338,14 @@ export const matches = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
     status:      matchStatusEnum("status").notNull().default("pending"),
     createdAt:   timestamp("created_at").defaultNow().notNull(),
-    updatedAt:   timestamp("updated_at").defaultNow().notNull(),
+    updatedAt:   timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()).notNull(),
   },
-  (t) => ({
-    uniqueMatch:  uniqueIndex("matches_unique_idx").on(t.initiatorId, t.receiverId),
-    initiatorIdx: index("matches_initiator_idx").on(t.initiatorId),
-    receiverIdx:  index("matches_receiver_idx").on(t.receiverId),
-    statusIdx:    index("matches_status_idx").on(t.status),
-  })
+  (t) => [
+    uniqueIndex("matches_unique_idx").on(t.initiatorId, t.receiverId),
+    index("matches_initiator_idx").on(t.initiatorId),
+    index("matches_receiver_idx").on(t.receiverId),
+    index("matches_status_idx").on(t.status),
+  ]
 );
 
 // ─────────────────────────────────────────
@@ -347,12 +353,13 @@ export const matches = pgTable(
 // ─────────────────────────────────────────
 
 export const conversations = pgTable("conversations", {
-  id:        text("id").primaryKey(),
-  matchId:   text("match_id")
+  id:            text("id").primaryKey(),
+  matchId:       text("match_id")
     .notNull()
     .references(() => matches.id, { onDelete: "cascade" })
     .unique(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  lastMessageAt: timestamp("last_message_at"),
+  createdAt:     timestamp("created_at").defaultNow().notNull(),
 });
 
 // ─────────────────────────────────────────
@@ -373,11 +380,11 @@ export const messages = pgTable(
     isRead:         boolean("is_read").notNull().default(false),
     sentAt:         timestamp("sent_at").defaultNow().notNull(),
   },
-  (t) => ({
-    convIdx:   index("messages_conv_idx").on(t.conversationId),
-    senderIdx: index("messages_sender_idx").on(t.senderId),
-    sentAtIdx: index("messages_sent_at_idx").on(t.sentAt),
-  })
+  (t) => [
+    index("messages_conv_idx").on(t.conversationId),
+    index("messages_sender_idx").on(t.senderId),
+    index("messages_sent_at_idx").on(t.sentAt),
+  ]
 );
 
 // ─────────────────────────────────────────
@@ -396,9 +403,9 @@ export const savedProfiles = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
     createdAt:   timestamp("created_at").defaultNow().notNull(),
   },
-  (t) => ({
-    uniqueSave: uniqueIndex("saved_profiles_unique_idx").on(t.userId, t.savedUserId),
-  })
+  (t) => [
+    uniqueIndex("saved_profiles_unique_idx").on(t.userId, t.savedUserId),
+  ]
 );
 
 export const savedListings = pgTable(
@@ -413,9 +420,9 @@ export const savedListings = pgTable(
       .references(() => roomListings.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (t) => ({
-    uniqueSave: uniqueIndex("saved_listings_unique_idx").on(t.userId, t.listingId),
-  })
+  (t) => [
+    uniqueIndex("saved_listings_unique_idx").on(t.userId, t.listingId),
+  ]
 );
 
 // ─────────────────────────────────────────
@@ -454,11 +461,11 @@ export const blockedUsers = pgTable(
       .references(() => user.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (t) => ({
-    uniqueBlock: uniqueIndex("blocked_users_unique_idx").on(t.blockerId, t.blockedId),
-    blockerIdx:  index("blocked_users_blocker_idx").on(t.blockerId),
-    blockedIdx:  index("blocked_users_blocked_idx").on(t.blockedId),
-  })
+  (t) => [
+    uniqueIndex("blocked_users_unique_idx").on(t.blockerId, t.blockedId),
+    index("blocked_users_blocker_idx").on(t.blockerId),
+    index("blocked_users_blocked_idx").on(t.blockedId),
+  ]
 );
 
 // ─────────────────────────────────────────
@@ -473,11 +480,13 @@ export const reports = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
 
-    // What is being reported (at least one must be set)
+    // What is being reported (at least one must be set depending on reportedProperty)
     reportedUserId:     text("reported_user_id")
       .references(() => user.id, { onDelete: "set null" }),
     reportedListingId:  text("reported_listing_id")
       .references(() => roomListings.id, { onDelete: "set null" }),
+    reportedMessageId:  text("reported_message_id")
+      .references(() => messages.id, { onDelete: "set null" }),
     reportedProperty:   reportedPropertyEnum("reported_property").notNull(),
 
     // Content
@@ -492,10 +501,10 @@ export const reports = pgTable(
 
     createdAt:          timestamp("created_at").defaultNow().notNull(),
   },
-  (t) => ({
-    reporterIdx: index("reports_reporter_idx").on(t.reporterId),
-    statusIdx:   index("reports_status_idx").on(t.status),
-  })
+  (t) => [
+    index("reports_reporter_idx").on(t.reporterId),
+    index("reports_status_idx").on(t.status),
+  ]
 );
 
 // ─────────────────────────────────────────
@@ -503,18 +512,22 @@ export const reports = pgTable(
 // ─────────────────────────────────────────
 
 export const userRelations = relations(user, ({ one, many }) => ({
-  preferences:     one(userPreferences, { fields: [user.id], references: [userPreferences.userId] }),
-  kyc:             one(kycVerifications, { fields: [user.id], references: [kycVerifications.userId] }),
-  listings:        many(roomListings),
-  sentMatches:     many(matches, { relationName: "initiator" }),
-  receivedMatches: many(matches, { relationName: "receiver" }),
-  savedProfiles:   many(savedProfiles, { relationName: "saver" }),
-  savedListings:   many(savedListings),
-  sentMessages:    many(messages),
-  blocking:        many(blockedUsers, { relationName: "blocker" }),
-  blockedBy:       many(blockedUsers, { relationName: "blocked" }),
-  reportsFiled:    many(reports, { relationName: "reporter" }),
-  reportsReceived: many(reports, { relationName: "reportedUser" }),
+  preferences:          one(userPreferences, { fields: [user.id], references: [userPreferences.userId] }),
+  kyc:                  one(kycVerifications, { fields: [user.id], references: [kycVerifications.userId] }),
+  listings:             many(roomListings),
+  sentMatches:          many(matches, { relationName: "initiator" }),
+  receivedMatches:      many(matches, { relationName: "receiver" }),
+  savedProfiles:        many(savedProfiles, { relationName: "saver" }),
+  savedByOthers:        many(savedProfiles, { relationName: "savedProfile" }),
+  savedListings:        many(savedListings),
+  sentMessages:         many(messages),
+  blocking:             many(blockedUsers, { relationName: "blocker" }),
+  blockedBy:            many(blockedUsers, { relationName: "blocked" }),
+  reportsFiled:         many(reports, { relationName: "reportsFiled" }),
+  reportsReceived:      many(reports, { relationName: "reportsReceived" }),
+  reportsReviewed:      many(reports, { relationName: "reportsReviewed" }),
+  compatibilityAsUserA: many(compatibilityScores, { relationName: "userA" }),
+  compatibilityAsUserB: many(compatibilityScores, { relationName: "userB" }),
 }));
 
 export const matchesRelations = relations(matches, ({ one }) => ({
@@ -528,9 +541,10 @@ export const conversationsRelations = relations(conversations, ({ one, many }) =
   messages: many(messages),
 }));
 
-export const messagesRelations = relations(messages, ({ one }) => ({
+export const messagesRelations = relations(messages, ({ one, many }) => ({
   conversation: one(conversations, { fields: [messages.conversationId], references: [conversations.id] }),
   sender:       one(user, { fields: [messages.senderId], references: [user.id] }),
+  reports:      many(reports),
 }));
 
 export const roomListingsRelations = relations(roomListings, ({ one, many }) => ({
@@ -545,10 +559,30 @@ export const blockedUsersRelations = relations(blockedUsers, ({ one }) => ({
 }));
 
 export const reportsRelations = relations(reports, ({ one }) => ({
-  reporter:        one(user, { fields: [reports.reporterId], references: [user.id], relationName: "reporter" }),
-  reportedUser:    one(user, { fields: [reports.reportedUserId], references: [user.id], relationName: "reportedUser" }),
+  reporter:        one(user, { fields: [reports.reporterId],        references: [user.id], relationName: "reportsFiled" }),
+  reportedUser:    one(user, { fields: [reports.reportedUserId],    references: [user.id], relationName: "reportsReceived" }),
   reportedListing: one(roomListings, { fields: [reports.reportedListingId], references: [roomListings.id] }),
-  reviewer:        one(user, { fields: [reports.reviewedBy], references: [user.id] }),
+  reportedMessage: one(messages,     { fields: [reports.reportedMessageId], references: [messages.id] }),
+  reviewer:        one(user, { fields: [reports.reviewedBy],        references: [user.id], relationName: "reportsReviewed" }),
+}));
+
+export const userPreferencesRelations = relations(userPreferences, ({ one }) => ({
+  user: one(user, { fields: [userPreferences.userId], references: [user.id] }),
+}));
+
+export const savedProfilesRelations = relations(savedProfiles, ({ one }) => ({
+  user:      one(user, { fields: [savedProfiles.userId],      references: [user.id], relationName: "saver" }),
+  savedUser: one(user, { fields: [savedProfiles.savedUserId], references: [user.id], relationName: "savedProfile" }),
+}));
+
+export const savedListingsRelations = relations(savedListings, ({ one }) => ({
+  user:    one(user,         { fields: [savedListings.userId],    references: [user.id] }),
+  listing: one(roomListings, { fields: [savedListings.listingId], references: [roomListings.id] }),
+}));
+
+export const compatibilityScoresRelations = relations(compatibilityScores, ({ one }) => ({
+  userA: one(user, { fields: [compatibilityScores.userAId], references: [user.id], relationName: "userA" }),
+  userB: one(user, { fields: [compatibilityScores.userBId], references: [user.id], relationName: "userB" }),
 }));
 
 // ─────────────────────────────────────────
