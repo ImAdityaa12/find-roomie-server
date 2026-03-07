@@ -26,6 +26,7 @@ export const auth = betterAuth({
     "exp://192.168.1.5:8081",
     "client://",
     "client://",
+    "exp://192.168.1.7:8081",
     `${process.env.CLIENT_URL}`
   ],
 });
