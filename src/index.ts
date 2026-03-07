@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { auth } from './lib/auth';
+import { auth } from './lib/auth.js';
 import { toNodeHandler } from 'better-auth/node';
 
 const app = express();
@@ -24,3 +24,5 @@ app.get('/', (req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+export default app;

@@ -1,20 +1,11 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { db } from '../db';
-import * as schema from '../db/schema';
+import { db } from '../db/index.js';
+import * as schema from '../db/schema.js';
 import { expo } from '@better-auth/expo';
 
 export const auth = betterAuth({
-  trustedOrigins: [
-    "http://localhost:3000",
-        "http://10.0.2.2:3000",
-        "http://10.0.2.2:8081",
-        "exp://10.0.2.2:8081",
-        "exp://192.168.1.5:8081",
-        "client://",
-        "client://",
-],
-plugins: [expo()],
+  plugins: [expo()],
   database: drizzleAdapter(db, {
     provider: 'pg',
     schema: {
@@ -27,7 +18,16 @@ plugins: [expo()],
   emailAndPassword: {
     enabled: true,
   },
-
+  trustedOrigins: [
+    "http://localhost:3000",
+    "http://10.0.2.2:3000",
+    "http://10.0.2.2:8081",
+    "exp://10.0.2.2:8081",
+    "exp://192.168.1.5:8081",
+    "client://",
+    "client://",
+    `${process.env.CLIENT_URL}`
+  ],
 });
 
 
