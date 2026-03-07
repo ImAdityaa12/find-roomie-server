@@ -8,6 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
+  // TODO: Fix this cors configuration
   origin: true,
   credentials: true,
 }));
