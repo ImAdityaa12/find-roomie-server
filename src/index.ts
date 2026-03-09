@@ -3,10 +3,12 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { auth } from './lib/auth.js';
 import { toNodeHandler } from 'better-auth/node';
+import userRouter from './routes/user.js';
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+app.use(express.json());
 app.use(cors({
   // TODO: Fix this cors configuration
   origin: true,
@@ -14,7 +16,9 @@ app.use(cors({
 }));
 
 app.all('/api/auth/*splat', toNodeHandler(auth));
-app.use(express.json());
+app.use('/user', userRouter);
+
+
 
 // Mount Better Auth handler at /api/auth/*
 
