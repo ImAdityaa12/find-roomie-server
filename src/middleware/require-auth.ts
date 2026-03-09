@@ -1,4 +1,4 @@
-import { auth } from '../lib/auth.js';         // import your better-auth instance
+import { auth } from '@/lib/auth.js';
 import { Request, Response, NextFunction } from 'express';
 
 

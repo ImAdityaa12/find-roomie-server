@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { db } from '../db/index.js';
-import { userPreferences } from '../db/schema.js';
+import { db } from '@/db/index.js';
+import { userPreferences } from '@/db/schema.js';
 import { randomUUID } from 'crypto';
 
 export const onboardUser = async (req: Request, res: Response) => {
