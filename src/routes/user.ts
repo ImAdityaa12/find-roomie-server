@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { requireAuth } from '../middleware/requireAuth.js';
-import { onboardUser } from '../controllers/userController.js';
+import { requireAuth } from '../middleware/require-auth.js';
+import { onboardUser } from '../controllers/user-controller.js';
 
 const router = Router();
 router.post('/onboarding', requireAuth, onboardUser);
