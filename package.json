@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --exec tsx src/server.ts",
+    "dev": "tsx src/server.ts",
     "build": "tsup",
     "start": "node dist/server.js",
+    "vercel-build": "npm run build",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
