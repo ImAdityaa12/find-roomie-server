@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth.js';
+import { auth } from '@/lib/auth.ts';
 import { Request, Response, NextFunction } from 'express';
 
 

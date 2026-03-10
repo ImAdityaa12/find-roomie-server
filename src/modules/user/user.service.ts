@@ -1,6 +1,6 @@
-import { db } from '@/db/index.js';
-import { userPreferences } from '@/db/schema.js';
-import { ValidateOnboardBody } from './types.js';
+import { db } from '@/db/index.ts';
+import { userPreferences } from '@/db/schema.ts';
+import { ValidateOnboardBody } from './types.ts';
 
 export async function upsertUserPreferences(userId: string, body: ValidateOnboardBody) {
   await db
