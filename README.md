@@ -1,5 +1,13 @@
 # Roommate Finder
 
+Version 1 (Mode 1) → "I need a Roommate"
+└── Has a room/flat, looking for someone to share with
+└── Can list their room with photos, rent, location
+
+Version 2 (Mode 2) → "I need a Room"
+└── Homeless/searching, looking for a room + roommate
+└── No listing, just a profile + preferences
+
 A Node.js backend application for finding compatible roommates and room listings with authentication, matching algorithms, and real-time messaging capabilities.
 
 ## Project Structure
@@ -51,12 +59,14 @@ roomate-finder/
 ## Features
 
 ### User Management
+
 - User authentication with Better Auth (email/password)
 - User profiles with preferences and lifestyle information
 - KYC verification system
 - User status modes: looking for room or looking for roommate
 
 ### Room Listings
+
 - Create and manage room listings
 - Location-based search with coordinates
 - Room types: private, shared, entire flat
@@ -64,17 +74,20 @@ roomate-finder/
 - Photo uploads support
 
 ### Matching System
+
 - Compatibility scoring algorithm
 - Match requests with status tracking (pending, matched, rejected, expired)
 - Saved profiles and listings
 - Gender, age, and lifestyle preference filters
 
 ### Messaging
+
 - Conversation threads between matched users
 - Message read status tracking
 - Real-time messaging support
 
 ### Safety Features
+
 - User blocking system
 - Report system for profiles, listings, and messages
 - KYC document verification (Aadhaar, PAN, Driving License, Passport)
@@ -109,3 +122,4 @@ npm start                # Run production build
 npm run db:generate      # Generate migration files
 npm run db:migrate       # Run migrations
 npm run
+```

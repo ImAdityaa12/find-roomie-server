@@ -12,6 +12,7 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { randomUUID } from "crypto";
 
 // ─────────────────────────────────────────
 // ENUMS
@@ -197,7 +198,7 @@ export const verification = pgTable("verification", {
 export const userPreferences = pgTable(
   "user_preferences",
   {
-    id:               text("id").primaryKey(),
+    id:               text("id").primaryKey().$defaultFn(() => randomUUID()),
     userId:           text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" })
@@ -248,7 +249,7 @@ export const userPreferences = pgTable(
 export const roomListings = pgTable(
   "room_listings",
   {
-    id:           text("id").primaryKey(),
+    id:           text("id").primaryKey().$defaultFn(() => randomUUID()),
     userId:       text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
@@ -296,7 +297,7 @@ export const roomListings = pgTable(
 export const compatibilityScores = pgTable(
   "compatibility_scores",
   {
-    id:           text("id").primaryKey(),
+    id:           text("id").primaryKey().$defaultFn(() => randomUUID()),
     userAId:      text("user_a_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
@@ -329,7 +330,7 @@ export const compatibilityScores = pgTable(
 export const matches = pgTable(
   "matches",
   {
-    id:          text("id").primaryKey(),
+    id:          text("id").primaryKey().$defaultFn(() => randomUUID()),
     initiatorId: text("initiator_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
@@ -353,7 +354,7 @@ export const matches = pgTable(
 // ─────────────────────────────────────────
 
 export const conversations = pgTable("conversations", {
-  id:            text("id").primaryKey(),
+  id:            text("id").primaryKey().$defaultFn(() => randomUUID()),
   matchId:       text("match_id")
     .notNull()
     .references(() => matches.id, { onDelete: "cascade" })
@@ -369,7 +370,7 @@ export const conversations = pgTable("conversations", {
 export const messages = pgTable(
   "messages",
   {
-    id:             text("id").primaryKey(),
+    id:             text("id").primaryKey().$defaultFn(() => randomUUID()),
     conversationId: text("conversation_id")
       .notNull()
       .references(() => conversations.id, { onDelete: "cascade" }),
@@ -394,7 +395,7 @@ export const messages = pgTable(
 export const savedProfiles = pgTable(
   "saved_profiles",
   {
-    id:          text("id").primaryKey(),
+    id:          text("id").primaryKey().$defaultFn(() => randomUUID()),
     userId:      text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
@@ -411,7 +412,7 @@ export const savedProfiles = pgTable(
 export const savedListings = pgTable(
   "saved_listings",
   {
-    id:        text("id").primaryKey(),
+    id:        text("id").primaryKey().$defaultFn(() => randomUUID()),
     userId:    text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
@@ -430,7 +431,7 @@ export const savedListings = pgTable(
 // ─────────────────────────────────────────
 
 export const kycVerifications = pgTable("kyc_verifications", {
-  id:            text("id").primaryKey(),
+  id:            text("id").primaryKey().$defaultFn(() => randomUUID()),
   userId:        text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" })
@@ -452,7 +453,7 @@ export const kycVerifications = pgTable("kyc_verifications", {
 export const blockedUsers = pgTable(
   "blocked_users",
   {
-    id:        text("id").primaryKey(),
+    id:        text("id").primaryKey().$defaultFn(() => randomUUID()),
     blockerId: text("blocker_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
@@ -475,7 +476,7 @@ export const blockedUsers = pgTable(
 export const reports = pgTable(
   "reports",
   {
-    id:                 text("id").primaryKey(),
+    id:                 text("id").primaryKey().$defaultFn(() => randomUUID()),
     reporterId:         text("reporter_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
