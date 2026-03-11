@@ -1,8 +1,8 @@
-import { Express } from "express";
+import { Express } from 'express';
 
 export const uploadMedia = (file: Express.Multer.File) => {
-  return {
-    url: file.path,
-    publicId: file.filename,
-  };
+    return {
+        url: file.path,
+        publicId: file.filename,
+    };
 };
