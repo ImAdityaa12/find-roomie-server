@@ -1,0 +1,15 @@
+echo "Running Prettier..."
+npx prettier --write .
+if [ $? -ne 0 ]; then
+  echo "Prettier failed. Push aborted."
+  exit 1
+fi
+
+echo "Running build..."
+npm run build
+if [ $? -ne 0 ]; then
+  echo "Build failed. Push aborted."
+  exit 1
+fi
+
+echo "All checks passed. Pushing..."
