@@ -1,43 +1,47 @@
 {
-  "name": "roomate-finder",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {
-    "dev": "nodemon --exec tsx src/index.ts",
-    "build": "tsup",
-    "start": "node dist/index.js",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@better-auth/expo": "^1.5.4",
-    "@neondatabase/serverless": "^1.0.2",
-    "@types/cors": "^2.8.19",
-    "better-auth": "^1.5.1",
-    "cloudinary": "^1.41.3",
-    "cors": "^2.8.6",
-    "dotenv": "^17.3.1",
-    "drizzle-orm": "^0.45.1",
-    "express": "^5.2.1",
-    "multer": "^2.1.1",
-    "multer-storage-cloudinary": "^4.0.0"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.6",
-    "@types/multer": "^2.1.0",
-    "@types/node": "^25.3.3",
-    "drizzle-kit": "^0.31.9",
-    "nodemon": "^3.1.14",
-    "ts-node": "^10.9.2",
-    "tsup": "^8.5.1",
-    "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
-  }
+    "name": "roomate-finder",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "dev": "tsx src/server.ts",
+        "build": "tsup",
+        "start": "node dist/server.js",
+        "vercel-build": "npm run build",
+        "db:generate": "drizzle-kit generate",
+        "db:migrate": "drizzle-kit migrate",
+        "db:push": "drizzle-kit push",
+        "db:studio": "drizzle-kit studio",
+        "prepare": "husky"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@better-auth/expo": "^1.5.4",
+        "@neondatabase/serverless": "^1.0.2",
+        "@types/cors": "^2.8.19",
+        "better-auth": "^1.5.1",
+        "cloudinary": "^1.41.3",
+        "cors": "^2.8.6",
+        "dotenv": "^17.3.1",
+        "drizzle-orm": "^0.45.1",
+        "express": "^5.2.1",
+        "multer": "^2.1.1",
+        "multer-storage-cloudinary": "^4.0.0",
+        "tsup": "^8.5.1",
+        "typescript": "^5.9.3"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.6",
+        "@types/multer": "^2.1.0",
+        "@types/node": "^25.3.3",
+        "drizzle-kit": "^0.31.9",
+        "husky": "^9.1.7",
+        "nodemon": "^3.1.14",
+        "prettier": "^3.8.1",
+        "ts-node": "^10.9.2",
+        "tsx": "^4.21.0"
+    }
 }

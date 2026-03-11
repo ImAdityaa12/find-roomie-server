@@ -1,10 +1,8 @@
-const uploadMedia = async (file) => {
-  return {
-    url: file.path,
-    publicId: file.filename,
-  };
-};
+import { Express } from 'express';
 
-module.exports = {
-  uploadMedia,
+export const uploadMedia = (file: Express.Multer.File) => {
+    return {
+        url: file.path,
+        publicId: file.filename,
+    };
 };
