@@ -5,8 +5,6 @@ import { auth } from '@/lib/auth.js';
 import { toNodeHandler } from 'better-auth/node';
 import userRouter from '@/modules/user/user.routes.js';
 import mediaRoutes from '@/modules/media/media.route.js';
-import v1OnboardingRouter from '@/modules/user/user.routes/onboardHasRoomUser';
-import v2OnboardingRouter from '@/modules/user/user.routes/onboardUser';
 
 
 const app = express();
