@@ -1,9 +1,9 @@
 import { eq } from 'drizzle-orm';
 import { db } from '@/db/index.js';
-import { user, userPreferences } from '@/db/schema.js';
-import type { ValidateOnboardBody } from './types.js';
+import { user, userPreferences, roomListings } from '@/db/schema.js';
+import type { ValidateHasRoomBody } from '@/modules/user/has-room/types';
 
-export async function onboardNeedsRoomService(userId: string, body: ValidateOnboardBody) {
+export async function onboardHasRoomService(userId: string, body: ValidateHasRoomBody) {
   // 1. Update user profile + flip status
   await db
     .update(user)
@@ -13,7 +13,7 @@ export async function onboardNeedsRoomService(userId: string, body: ValidateOnbo
       gender:         body.user.gender as typeof user.$inferSelect['gender'],
       bio:            body.user.bio ?? null,
       occupation:     body.user.occupation,
-      status:         'looking_for_room',
+      status:         'looking_for_roommate',
       onboardingDone: true,
       updatedAt:      new Date(),
     })
@@ -27,4 +27,11 @@ export async function onboardNeedsRoomService(userId: string, body: ValidateOnbo
       target: userPreferences.userId,
       set: { ...body.preferences, updatedAt: new Date() },
     });
+
+  // 3. Insert listing — city falls back to preferences.city
+  await db.insert(roomListings).values({
+    ...body.listing,
+    userId,
+    city: body.listing.city ?? body.preferences.city,
+  });
 }
