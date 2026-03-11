@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { NewUserPreferences } from './types.js';
-import { validateOnboardBody } from './user.validation.js';
-import { upsertUserPreferences } from './user.service.js';
+import { NewUserPreferences } from './types.ts';
+import { validateOnboardBody } from './user.validation.ts';
+import { upsertUserPreferences } from './user.service.ts';
 
 export const onboardUser = async (req: Request, res: Response) => {
   try {

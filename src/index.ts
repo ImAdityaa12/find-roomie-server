@@ -1,14 +1,14 @@
 import 'dotenv/config';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { auth } from '@/lib/auth.js';
+import { auth } from '@/lib/auth.ts';
 import { toNodeHandler } from 'better-auth/node';
-import userRouter from '@/modules/user/user.routes.js';
+import userRouter from '@/modules/user/user.routes.ts';
 import mediaRoutes from '@/modules/media/media.route.js';
 
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
 app.use(express.json());
 app.use(cors({
   // TODO: Fix this cors configuration
@@ -26,10 +26,6 @@ app.use("/api/media", mediaRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Roomate Finder API' });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
 });
 
 export default app;
