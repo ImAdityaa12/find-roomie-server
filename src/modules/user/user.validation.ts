@@ -6,8 +6,8 @@ import {
   guestPolicyEnum,
   vegPreferenceEnum,
   genderPreferenceEnum,
-} from '@/db/schema.js';
-import { NewUserPreferences } from './types.js';
+} from '@/db/schema.ts';
+import { NewUserPreferences } from './types.ts';
 
 type Body = Partial<NewUserPreferences>;
 
