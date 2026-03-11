@@ -8,6 +8,7 @@
         "dev": "tsx src/server.ts",
         "build": "tsup",
         "start": "node dist/server.js",
+        "lint:fix": "npx prettier --write .",
         "vercel-build": "npm run build",
         "db:generate": "drizzle-kit generate",
         "db:migrate": "drizzle-kit migrate",
