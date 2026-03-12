@@ -4,9 +4,11 @@ export type NewUserPreferences = typeof userPreferences.$inferInsert;
 export type NewUser = typeof user.$inferInsert;
 export type NewRoomListing = typeof roomListings.$inferInsert;
 
-// For needs-room: just preferences
-export type ValidateOnboardBody = Partial<NewUserPreferences> &
-    Pick<Required<NewUserPreferences>, 'city' | 'budgetMin' | 'budgetMax'>;
+// For needs-room: user profile + preferences
+export type ValidateOnboardBody = {
+    user: UserBody;
+    preferences: PreferencesBody;
+};
 
 // For has-room: user profile + preferences + listing
 export type UserBody = Pick<
