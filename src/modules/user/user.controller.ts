@@ -6,7 +6,7 @@ import {
     onboardHasRoomService,
 } from './user.service.js';
 import { db } from '@/db/index.js';
-import { user } from '@/db/schema.js';
+import { roomListings } from '@/db/schema.js';
 import { eq } from 'drizzle-orm';
 
 export const onboardUser = async (req: Request, res: Response) => {
@@ -47,33 +47,50 @@ export const onboardHasRoomUser = async (req: Request, res: Response) => {
     }
 };
 
-export const uploadProfilePicture = async (req: Request, res: Response) => {
+export const uploadRoomMedia = async (req: Request, res: Response) => {
     try {
         const userId = req.user!.id;
-        const file = req.file;
+        const files = req.files as Express.Multer.File[];
 
-        if (!file) {
-            return res.status(400).json({ error: 'No file uploaded' });
+        if (!files || files.length === 0) {
+            return res.status(400).json({ error: 'No files uploaded' });
         }
 
-        // Update user's image in database
+        const [listing] = await db
+            .select()
+            .from(roomListings)
+            .where(eq(roomListings.userId, userId))
+            .limit(1);
+
+        if (!listing) {
+            return res
+                .status(404)
+                .json({ error: 'No listing found for this user' });
+        }
+
+        const newPhotoUrls = files.map((file) => file.path);
+        const existingPhotos = (listing.photos as string[]) || [];
+        const updatedPhotos = [...existingPhotos, ...newPhotoUrls];
+
         await db
-            .update(user)
+            .update(roomListings)
             .set({
-                image: file.path,
+                photos: updatedPhotos,
                 updatedAt: new Date(),
             })
-            .where(eq(user.id, userId));
+            .where(eq(roomListings.id, listing.id));
 
         return res.status(200).json({
             success: true,
-            message: 'Profile picture updated',
+            message: 'Room media uploaded successfully',
             data: {
-                url: file.path,
+                uploadedCount: files.length,
+                totalPhotos: updatedPhotos.length,
+                urls: newPhotoUrls,
             },
         });
     } catch (err) {
-        console.error('Profile picture upload error:', err);
+        console.error('Room media upload error:', err);
         return res.status(500).json({ error: 'Upload failed' });
     }
 };

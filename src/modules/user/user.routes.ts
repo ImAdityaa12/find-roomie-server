@@ -3,18 +3,18 @@ import { requireAuth } from '@/middleware/require-auth.js';
 import {
     onboardUser,
     onboardHasRoomUser,
-    uploadProfilePicture,
+    uploadRoomMedia,
 } from './user.controller.js';
 import upload from '@/modules/media/media.middleware.js';
 
 const router = Router();
-router.post('/v1/onboarding/has-room', requireAuth, onboardHasRoomUser);
-router.post('/v2/onboarding/needs-room', requireAuth, onboardUser);
+router.post('/v1/onboarding', requireAuth, onboardHasRoomUser);
+router.post('/v2/onboarding', requireAuth, onboardUser);
 router.post(
-    '/profile-picture',
+    '/room-media',
     requireAuth,
-    upload.single('file'),
-    uploadProfilePicture
+    upload.array('files', 10),
+    uploadRoomMedia
 );
 
 export default router;
