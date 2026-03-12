@@ -18,8 +18,6 @@ import type {
     ValidateHasRoomBody,
 } from './types.js';
 
-// ── Needs-room validation (just preferences) ──────────────────────────────────
-
 export function validateOnboardBody(
     body: Partial<ValidateOnboardBody>
 ): string | null {
