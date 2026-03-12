@@ -24,9 +24,9 @@ export const auth = betterAuth({
         'http://10.0.2.2:8081',
         'exp://10.0.2.2:8081',
         'exp://192.168.1.5:8081',
-        'client://',
-        'client://',
         'exp://192.168.1.7:8081',
+        'exp://192.168.1.6:8081',
+        'http://localhost:8081',
         `${process.env.CLIENT_URL}`,
     ],
 });
