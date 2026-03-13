@@ -18,6 +18,18 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
+
+    user: {
+        additionalFields: {
+            onboarding_done: {
+                type: 'boolean',
+                required: false,
+                defaultValue: false,
+                input: true,
+                returned: true,
+            },
+        },
+    },
     trustedOrigins: [
         'http://localhost:3000',
         'http://10.0.2.2:3000',
