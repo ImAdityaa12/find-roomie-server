@@ -7,13 +7,16 @@ export async function upsertUserPreferences(
     userId: string,
     body: ValidateOnboardBody
 ) {
-    await db
+    const result = await db
         .insert(userPreferences)
         .values({ ...body, userId })
         .onConflictDoUpdate({
             target: userPreferences.userId,
             set: body,
-        });
+        })
+        .returning();
+
+    return result;
 }
 
 // ── NEW: inserts a room listing row, merging photo + video URLs into photos[] ──
