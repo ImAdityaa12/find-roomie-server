@@ -1,12 +1,15 @@
 import { auth } from '../lib/auth.js';
 
-type Session = typeof auth.$Infer.Session; // get types directly from better-auth
+type Session = typeof auth.$Infer.Session;
+type BetterAuthUser = Session['user'];
 
 declare global {
     namespace Express {
         interface Request {
-            user?: Session['user']; // now req.user is valid TypeScript
-            session?: Session['session']; // now req.session is valid TypeScript
+            user?: BetterAuthUser & {
+                status?: 'looking_for_room' | 'looking_for_roommate';
+            };
+            session?: Session['session'];
         }
     }
 }
