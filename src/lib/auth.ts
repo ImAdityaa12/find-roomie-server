@@ -30,6 +30,31 @@ export const auth = betterAuth({
             },
         },
     },
+
+    user: {
+        additionalFields: {
+            phone: {
+                type: 'string',
+                required: true,
+            },
+            age: {
+                type: 'number',
+                required: true,
+            },
+            gender: {
+                type: 'string',
+                required: true,
+                validate: (value: string) =>
+                    ['male', 'female', 'other', 'prefer_not_to_say'].includes(
+                        value
+                    ),
+            },
+            bio: {
+                type: 'string',
+            },
+        },
+    },
+
     trustedOrigins: [
         'http://localhost:3000',
         'http://10.0.2.2:3000',
