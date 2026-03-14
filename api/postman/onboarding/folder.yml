@@ -1,0 +1,7 @@
+info:
+    name: onboarding
+    type: folder
+    seq: 4
+
+request:
+    auth: inherit

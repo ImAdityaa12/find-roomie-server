@@ -1,0 +1,32 @@
+opencollection: 1.0.0
+
+info:
+    name: find-roomie
+config:
+    proxy:
+        inherit: true
+        config:
+            protocol: http
+            hostname: ''
+            port: ''
+            auth:
+                username: ''
+                password: ''
+            bypassProxy: ''
+
+request:
+    auth:
+        type: bearer
+    variables:
+        - name: DEVELOP_URL
+          value: https://find-roomie-server-dev.vercel.app
+        - name: BASE_URL
+          value: http://localhost:3000
+        - name: PRODUCTION_URL
+          value: https://find-roomie-server.vercel.app
+bundled: false
+extensions:
+    bruno:
+        ignore:
+            - node_modules
+            - .git

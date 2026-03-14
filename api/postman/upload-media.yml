@@ -1,0 +1,25 @@
+info:
+    name: upload-media
+    type: http
+    seq: 3
+
+http:
+    method: post
+    url: http://localhost:3000/api/media/upload
+    headers:
+        - name: Content-Type
+          value: multipart/form-data
+    body:
+        type: multipart-form
+        data:
+            - name: file
+              type: file
+              value:
+                  - C:\Users\Lenovo\Desktop\extras\WhatsApp Image 2025-03-28 at 20.43.03_f8a416ab.jpg
+    auth: inherit
+
+settings:
+    encodeUrl: false
+    timeout: 0
+    followRedirects: true
+    maxRedirects: 5
