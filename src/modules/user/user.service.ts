@@ -6,11 +6,14 @@ export async function upsertUserPreferences(
     userId: string,
     body: ValidateOnboardBody
 ) {
-    await db
+    const result = await db
         .insert(userPreferences)
         .values({ ...body, userId })
         .onConflictDoUpdate({
             target: userPreferences.userId,
             set: body,
-        });
+        })
+        .returning();
+
+    return result;
 }
