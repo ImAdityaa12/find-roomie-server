@@ -4,7 +4,7 @@ import cloudinary from '@/lib/cloudinary';
 
 const storage = new CloudinaryStorage({
     cloudinary,
-    params: async (_req, _file) => ({
+    params: async () => ({
         folder: 'roommate-app',
         resource_type: 'auto',
     }),

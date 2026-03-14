@@ -7,7 +7,7 @@ export const requireAuth = async (
     next: NextFunction
 ) => {
     const session = await auth.api.getSession({
-        headers: req.headers as any,
+        headers: req.headers as Record<string, string | string[]>,
     });
 
     if (!session) {
