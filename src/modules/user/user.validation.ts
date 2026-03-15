@@ -76,6 +76,11 @@ export function validateOnboardV2Body(
             return 'ageMin cannot be greater than ageMax';
     }
 
+    if (body.lat != null && (body.lat < -90 || body.lat > 90))
+        return 'Latitude must be between -90 and 90';
+    if (body.lng != null && (body.lng < -180 || body.lng > 180))
+        return 'Longitude must be between -180 and 180';
+
     const enumChecks: [keyof OnboardV2Body, readonly string[]][] = [
         ['leaseDuration', leaseDurationEnum.enumValues],
         ['workSchedule', workScheduleEnum.enumValues],

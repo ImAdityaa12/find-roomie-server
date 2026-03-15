@@ -36,4 +36,6 @@ export type OnboardV2Body = {
     genderPreference?: NewUserPreferences['genderPreference'];
     ageMin?: number | null;
     ageMax?: number | null;
+    lat?: number | null;
+    lng?: number | null;
 };

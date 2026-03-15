@@ -1,40 +1,42 @@
 info:
-    name: v2
-    type: http
-    seq: 1
+  name: v2
+  type: http
+  seq: 1
 
 http:
-    method: post
-    url: '{{DEVELOP_URL}}/user/v2/onboarding'
-    headers:
-        - name: Cookie
-          value: better-auth.session_token=EzBHqhpGYLGaFXpi23XHOioDeVDDlEWj.rQ9S%2BMlKgTyIm%2B%2FAxjxtiuOwdgWSFvFp9RqPIEKmFoI%3D
-        - name: Content-Type
-          value: application/json
-    body:
-        type: json
-        data: |-
-            {
-              "city": "Mumbai",
-              "locality": "Andheri",
-              "budgetMin": 10000,
-              "budgetMax": 20000,
-              "moveInDate": "2026-04-01",
-              "leaseDuration": "6_months",
-              "workSchedule": "day_shift",
-              "sleepSchedule": "early_bird",
-              "cleanliness": "very_clean",
-              "vegPreference": "veg",
-              "smoking": false,
-              "drinking": false,
-              "genderPreference": "any",
-              "ageMin": 22,
-              "ageMax": 35
-            }
-    auth: inherit
+  method: post
+  url: "{{BASE_URL}}/user/v2/onboarding"
+  headers:
+    - name: Cookie
+      value: better-auth.session_token=EzBHqhpGYLGaFXpi23XHOioDeVDDlEWj.rQ9S%2BMlKgTyIm%2B%2FAxjxtiuOwdgWSFvFp9RqPIEKmFoI%3D
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |2-
+       {                                                           
+          "city": "Mumbai",                                       
+          "locality": "Andheri",                                   
+          "budgetMin": 10000,                                  
+          "budgetMax": 20000,
+          "moveInDate": "2026-04-01",
+          "leaseDuration": "6_months",
+          "workSchedule": "day_shift",
+          "sleepSchedule": "early_bird",
+          "cleanliness": "very_clean",
+          "vegPreference": "veg",
+          "smoking": false,
+          "drinking": false,
+          "genderPreference": "any",
+          "ageMin": 22,
+          "ageMax": 35,
+          "lat": 19.1136,
+          "lng": 72.8697
+        }
+  auth: inherit
 
 settings:
-    encodeUrl: false
-    timeout: 0
-    followRedirects: true
-    maxRedirects: 5
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
