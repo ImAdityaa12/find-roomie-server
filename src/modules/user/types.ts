@@ -49,7 +49,6 @@ export type OnboardV1ListingBody = {
     amenities?: string[];
     availableFrom?: string | null;
     photos?: string[];
-    videos?: string[];
 };
 
 export type OnboardV1Body = {

@@ -50,8 +50,8 @@ http:
               "availableFrom": "2026-04-01",
               "lat": 19.1136,
               "lng": 72.8697,
-              "photos": ["https://res.cloudinary.com/"],
-              "videos": ["https://res.cloudinary.com/"]
+              "photos": ["https://res.cloudinary.com/"]
+      //         "videos": ["https://res.cloudinary.com/"]
           }
       }
   auth: inherit

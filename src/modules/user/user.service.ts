@@ -25,18 +25,13 @@ export async function upsertUserPreferences(
 export async function createRoomListing(
     userId: string,
     body: ValidateRoomListingBody,
-    photoUrls: string[],
-    videoUrls: string[]
+    photos: string[]
 ) {
     const { amenities, ...rest } = body;
     await db.insert(roomListings).values({
         ...rest,
         userId,
-        // neon-http driver requires explicit JSON.stringify for jsonb array columns
-        photos: JSON.stringify([
-            ...photoUrls,
-            ...videoUrls,
-        ]) as unknown as string[],
+        photos: JSON.stringify(photos) as unknown as string[],
         amenities: JSON.stringify(amenities ?? []) as unknown as string[],
     });
 }

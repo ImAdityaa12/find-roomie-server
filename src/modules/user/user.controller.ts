@@ -49,57 +49,27 @@ export const onboardUserV1 = async (req: Request, res: Response) => {
         const userId = req.user!.id;
         const body = req.body as OnboardV1Body;
 
-        // Step 1: parse nested fields (multipart sends them as JSON strings)
-        const rawPrefs =
-            typeof body.preferences === 'string'
-                ? JSON.parse(body.preferences)
-                : body.preferences;
-
-        const rawListing =
-            typeof body.listing === 'string'
-                ? JSON.parse(body.listing)
-                : (body.listing ?? null);
-
-        // Step 2: validate preferences
-        const prefsError = validateOnboardV1PreferencesBody(rawPrefs ?? {});
+        const prefsError = validateOnboardV1PreferencesBody(body.preferences ?? {});
         if (prefsError) return res.status(400).json({ error: prefsError });
 
-        // Step 3: validate listing (required for looking_for_roommate users)
         const isLookingForRoommate =
-            req.user!.status === 'looking_for_roommate' || rawListing != null;
+            req.user!.status === 'looking_for_roommate' || body.listing != null;
 
         if (isLookingForRoommate) {
-            if (!rawListing)
+            if (!body.listing)
                 return res.status(400).json({
                     error: 'listing is required for looking_for_roommate users',
                 });
-            const listingError = validateOnboardV1ListingBody(rawListing);
+            const listingError = validateOnboardV1ListingBody(body.listing);
             if (listingError)
                 return res.status(400).json({ error: listingError });
         }
 
-        // Step 4: merge file uploads (Cloudinary) with inline URL links from body
-        const files = req.files as
-            | { [fieldname: string]: Express.Multer.File[] }
-            | undefined;
+        await upsertUserPreferences(userId, body.preferences);
 
-        const photoUrls = [
-            ...(files?.['photos'] ?? []).map((f) => f.path),
-            ...(rawListing?.photos ?? []),
-        ];
-        const videoUrls = [
-            ...(files?.['videos'] ?? []).map((f) => f.path),
-            ...(rawListing?.videos ?? []),
-        ];
-
-        // Step 5: persist
-        await upsertUserPreferences(userId, rawPrefs);
-
-        if (isLookingForRoommate && rawListing) {
-            // strip photos/videos from body — they're already merged into photoUrls/videoUrls
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { photos, videos, ...listingData } = rawListing;
-            await createRoomListing(userId, listingData, photoUrls, videoUrls);
+        if (isLookingForRoommate && body.listing) {
+            const { photos, ...listingData } = body.listing;
+            await createRoomListing(userId, listingData, photos ?? []);
         }
 
         await markOnboardingDone(userId);
