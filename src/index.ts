@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import morgan from 'morgan';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { auth } from '@/lib/auth.ts';
@@ -16,6 +17,7 @@ app.use(
         credentials: true,
     })
 );
+app.use(morgan('dev'));
 
 app.all('/api/auth/*splat', toNodeHandler(auth));
 app.use('/user', userRouter);
