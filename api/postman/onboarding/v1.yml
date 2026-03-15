@@ -1,20 +1,21 @@
 info:
-    name: v1
-    type: http
-    seq: 2
+  name: v1
+  type: http
+  seq: 2
 
 http:
-    method: post
-    url: http://localhost:3000/user/v1/onboarding
-    headers:
-        - name: Content-Type
-          value: application/json
-        - name: Authorization
-          value: Bearer <your-token>
-    body:
-        type: json
-        data: |
-            {
+  method: post
+  url: "{{BASE_URL}}/user/v1/onboarding"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer <your-token>
+  body:
+    type: json
+    data: |
+      {
+          "preferences": {
               "city": "Mumbai",
               "budgetMin": 10000,
               "budgetMax": 25000,
@@ -30,28 +31,33 @@ http:
               "drinking": false,
               "ageMin": 22,
               "ageMax": 35,
-              "listing": {
-                "title": "Spacious room in Bandra",
-                "city": "Mumbai",
-                "locality": "Bandra West",
-                "rent": 15000,
-                "roomType": "private_room",
-                "furnishing": "semi_furnished",
-                "deposit": 30000,
-                "totalRooms": 3,
-                "bathrooms": 1,
-                "photoUrls": [
-                  "https://example.com/photo1.jpg"
-                ],
-                "videoUrls": [
-                  "https://example.com/tour.mp4"
-                ]
-              }
-            }
-    auth: inherit
+              "lat": 19.1136,
+              "lng": 72.8697
+          },
+          "listing": {
+              "title": "Spacious room in Andheri",
+              "city": "Mumbai",
+              "locality": "Andheri",
+              "rent": 15000,
+              "roomType": "private_room",
+              "description": "...",
+              "fullAddress": "...",
+              "deposit": 30000,
+              "furnishing": "semi_furnished",
+              "totalRooms": 3,
+              "bathrooms": 2,
+              "amenities": ["wifi", "ac"],
+              "availableFrom": "2026-04-01",
+              "lat": 19.1136,
+              "lng": 72.8697,
+              "photos": ["https://res.cloudinary.com/"],
+              "videos": ["https://res.cloudinary.com/"]
+          }
+      }
+  auth: inherit
 
 settings:
-    encodeUrl: false
-    timeout: 0
-    followRedirects: true
-    maxRedirects: 5
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

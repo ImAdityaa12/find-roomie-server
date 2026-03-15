@@ -28,10 +28,16 @@ export async function createRoomListing(
     photoUrls: string[],
     videoUrls: string[]
 ) {
+    const { amenities, ...rest } = body;
     await db.insert(roomListings).values({
-        ...body,
+        ...rest,
         userId,
-        photos: [...photoUrls, ...videoUrls],
+        // neon-http driver requires explicit JSON.stringify for jsonb array columns
+        photos: JSON.stringify([
+            ...photoUrls,
+            ...videoUrls,
+        ]) as unknown as string[],
+        amenities: JSON.stringify(amenities ?? []) as unknown as string[],
     });
 }
 
