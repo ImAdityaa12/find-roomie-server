@@ -16,3 +16,24 @@ export type OnboardV1Body = {
     preferences: ValidateOnboardBody;
     listing?: ValidateRoomListingBody; // only when status === 'looking_for_roommate'
 };
+
+// shape of the v2 onboard request body (preferences only, no listing)
+export type OnboardV2Body = {
+    // required
+    city: string;
+    locality: string;
+    budgetMin: number;
+    budgetMax: number;
+    // optional
+    moveInDate?: string | null;
+    leaseDuration?: NewUserPreferences['leaseDuration'];
+    workSchedule?: NewUserPreferences['workSchedule'];
+    sleepSchedule?: NewUserPreferences['sleepSchedule'];
+    cleanliness?: NewUserPreferences['cleanliness'];
+    vegPreference?: NewUserPreferences['vegPreference'];
+    smoking?: boolean;
+    drinking?: boolean;
+    genderPreference?: NewUserPreferences['genderPreference'];
+    ageMin?: number | null;
+    ageMax?: number | null;
+};

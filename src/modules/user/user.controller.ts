@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import { NewUserPreferences } from './types.ts';
+import { NewUserPreferences, OnboardV2Body } from './types.ts';
 import {
     validateOnboardBody,
+    validateOnboardV2Body,
     validateRoomListingBody,
 } from './user.validation.ts';
 import {
@@ -99,6 +100,26 @@ export const onboardUserV1 = async (req: Request, res: Response) => {
             .json({ success: true, message: 'Onboarding complete!' });
     } catch (err) {
         console.error('V1 Onboarding error:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const onboardUserV2 = async (req: Request, res: Response) => {
+    try {
+        const userId = req.user!.id;
+        const body = req.body as OnboardV2Body;
+
+        const error = validateOnboardV2Body(body);
+        if (error) return res.status(400).json({ error });
+
+        await upsertUserPreferences(userId, body);
+        await markOnboardingDone(userId);
+
+        return res
+            .status(201)
+            .json({ success: true, message: 'Onboarding complete!' });
+    } catch (err) {
+        console.error('V2 Onboarding error:', err);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };

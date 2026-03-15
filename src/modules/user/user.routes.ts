@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { requireAuth } from '@/middleware/require-auth.ts';
-import { onboardUser, onboardUserV1 } from './user.controller.ts';
+import { onboardUserV1, onboardUserV2 } from './user.controller.ts';
 import upload from '../media/media.middleware';
 
 const router = Router();
@@ -12,6 +12,6 @@ const uploadFields = upload.fields([
 
 router.post('/v1/onboarding', requireAuth, uploadFields, onboardUserV1);
 
-router.post('/v2/onboarding', requireAuth, onboardUser);
+router.post('/v2/onboarding', requireAuth, onboardUserV2);
 
 export default router;

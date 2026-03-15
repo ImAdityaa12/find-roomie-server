@@ -1,57 +1,57 @@
 info:
-  name: v1
-  type: http
-  seq: 2
+    name: v1
+    type: http
+    seq: 2
 
 http:
-  method: post
-  url: http://localhost:3000/user/v1/onboarding
-  headers:
-    - name: Content-Type
-      value: application/json
-    - name: Authorization
-      value: Bearer <your-token>
-  body:
-    type: json
-    data: |
-      {
-        "city": "Mumbai",
-        "budgetMin": 10000,
-        "budgetMax": 25000,
-        "leaseDuration": "6_months",
-        "workSchedule": "day_shift",
-        "sleepSchedule": "flexible",
-        "cleanliness": "moderate",
-        "guestPolicy": "sometimes",
-        "vegPreference": "both",
-        "genderPreference": "any",
-        "petsAllowed": false,
-        "smoking": false,
-        "drinking": false,
-        "ageMin": 22,
-        "ageMax": 35,
-        "listing": {
-          "title": "Spacious room in Bandra",
-          "city": "Mumbai",
-          "locality": "Bandra West",
-          "rent": 15000,
-          "roomType": "private_room",
-          "furnishing": "semi_furnished",
-          "deposit": 30000,
-          "totalRooms": 3,
-          "bathrooms": 1,
-          "photoUrls": [
-            "https://example.com/photo1.jpg"
-          ],
-          "videoUrls": [
-            "https://example.com/tour.mp4"
-          ]
-        }
-      }
-  auth: inherit
+    method: post
+    url: http://localhost:3000/user/v1/onboarding
+    headers:
+        - name: Content-Type
+          value: application/json
+        - name: Authorization
+          value: Bearer <your-token>
+    body:
+        type: json
+        data: |
+            {
+              "city": "Mumbai",
+              "budgetMin": 10000,
+              "budgetMax": 25000,
+              "leaseDuration": "6_months",
+              "workSchedule": "day_shift",
+              "sleepSchedule": "flexible",
+              "cleanliness": "moderate",
+              "guestPolicy": "sometimes",
+              "vegPreference": "both",
+              "genderPreference": "any",
+              "petsAllowed": false,
+              "smoking": false,
+              "drinking": false,
+              "ageMin": 22,
+              "ageMax": 35,
+              "listing": {
+                "title": "Spacious room in Bandra",
+                "city": "Mumbai",
+                "locality": "Bandra West",
+                "rent": 15000,
+                "roomType": "private_room",
+                "furnishing": "semi_furnished",
+                "deposit": 30000,
+                "totalRooms": 3,
+                "bathrooms": 1,
+                "photoUrls": [
+                  "https://example.com/photo1.jpg"
+                ],
+                "videoUrls": [
+                  "https://example.com/tour.mp4"
+                ]
+              }
+            }
+    auth: inherit
 
 settings:
-  encodeUrl: false
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
+    encodeUrl: false
+    timeout: 0
+    followRedirects: true
+    maxRedirects: 5
