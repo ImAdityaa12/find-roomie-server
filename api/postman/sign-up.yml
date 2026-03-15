@@ -5,7 +5,7 @@ info:
 
 http:
     method: post
-    url: '{{PRODUCTION_URL}}/api/auth/sign-up/email'
+    url: '{{BASE_URL}}/api/auth/sign-up/email'
     headers:
         - name: Content-Type
           value: application/json
@@ -15,9 +15,12 @@ http:
         type: json
         data: |-
             {
-              "email": "test1@example.com",
-              "password": "password123",
-              "name": "Test User"
+              "email": "adityagupta1291@gmail.com",
+              "password": "12345678",
+              "name": "Aditya Raj Gupta",
+              "phone": "9517111597",                               
+              "age": 25,
+              "gender": "male"
             }
     auth: inherit
 

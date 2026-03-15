@@ -25,13 +25,14 @@ export async function upsertUserPreferences(
 export async function createRoomListing(
     userId: string,
     body: ValidateRoomListingBody,
-    photoUrls: string[],
-    videoUrls: string[]
+    photos: string[]
 ) {
+    const { amenities, ...rest } = body;
     await db.insert(roomListings).values({
-        ...body,
+        ...rest,
         userId,
-        photos: [...photoUrls, ...videoUrls],
+        photos: JSON.stringify(photos) as unknown as string[],
+        amenities: JSON.stringify(amenities ?? []) as unknown as string[],
     });
 }
 

@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
-import { NewUserPreferences } from './types.ts';
+import { NewUserPreferences, OnboardV1Body, OnboardV2Body } from './types.ts';
 import {
     validateOnboardBody,
-    validateRoomListingBody,
+    validateOnboardV1PreferencesBody,
+    validateOnboardV1ListingBody,
+    validateOnboardV2Body,
 } from './user.validation.ts';
 import {
     createRoomListing,
@@ -45,51 +47,31 @@ export const onboardUser = async (req: Request, res: Response) => {
 export const onboardUserV1 = async (req: Request, res: Response) => {
     try {
         const userId = req.user!.id;
+        const body = req.body as OnboardV1Body;
 
-        // Step 1: parse body
-        const rawPrefs =
-            typeof req.body.preferences === 'string'
-                ? JSON.parse(req.body.preferences)
-                : (req.body.preferences ?? req.body);
-
-        const rawListing =
-            typeof req.body.listing === 'string'
-                ? JSON.parse(req.body.listing)
-                : (req.body.listing ?? null);
-
-        // Step 2: validate preferences
-        const prefsError = validateOnboardBody(rawPrefs);
+        const prefsError = validateOnboardV1PreferencesBody(
+            body.preferences ?? {}
+        );
         if (prefsError) return res.status(400).json({ error: prefsError });
 
-        // Step 3: validate listing (Mode A only)
         const isLookingForRoommate =
-            req.user!.status === 'looking_for_roommate' || rawListing != null;
+            req.user!.status === 'looking_for_roommate' || body.listing != null;
 
         if (isLookingForRoommate) {
-            if (!rawListing)
+            if (!body.listing)
                 return res.status(400).json({
                     error: 'listing is required for looking_for_roommate users',
                 });
-            const listingError = validateRoomListingBody(rawListing);
+            const listingError = validateOnboardV1ListingBody(body.listing);
             if (listingError)
                 return res.status(400).json({ error: listingError });
         }
 
-        // Step 4: extract Cloudinary URLs
-        // multer-storage-cloudinary uploads automatically in the middleware,
-        // so file.path is already the public Cloudinary URL by this point.
-        const files = req.files as
-            | { [fieldname: string]: Express.Multer.File[] }
-            | undefined;
+        await upsertUserPreferences(userId, body.preferences);
 
-        const photoUrls = (files?.['photos'] ?? []).map((f) => f.path);
-        const videoUrls = (files?.['videos'] ?? []).map((f) => f.path);
-
-        // Step 5: persist
-        await upsertUserPreferences(userId, rawPrefs);
-
-        if (isLookingForRoommate && rawListing) {
-            await createRoomListing(userId, rawListing, photoUrls, videoUrls);
+        if (isLookingForRoommate && body.listing) {
+            const { photos, ...listingData } = body.listing;
+            await createRoomListing(userId, listingData, photos ?? []);
         }
 
         await markOnboardingDone(userId);
@@ -99,6 +81,26 @@ export const onboardUserV1 = async (req: Request, res: Response) => {
             .json({ success: true, message: 'Onboarding complete!' });
     } catch (err) {
         console.error('V1 Onboarding error:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+export const onboardUserV2 = async (req: Request, res: Response) => {
+    try {
+        const userId = req.user!.id;
+        const body = req.body as OnboardV2Body;
+
+        const error = validateOnboardV2Body(body);
+        if (error) return res.status(400).json({ error });
+
+        await upsertUserPreferences(userId, body);
+        await markOnboardingDone(userId);
+
+        return res
+            .status(201)
+            .json({ success: true, message: 'Onboarding complete!' });
+    } catch (err) {
+        console.error('V2 Onboarding error:', err);
         return res.status(500).json({ error: 'Internal server error' });
     }
 };
