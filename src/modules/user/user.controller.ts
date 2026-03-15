@@ -49,7 +49,9 @@ export const onboardUserV1 = async (req: Request, res: Response) => {
         const userId = req.user!.id;
         const body = req.body as OnboardV1Body;
 
-        const prefsError = validateOnboardV1PreferencesBody(body.preferences ?? {});
+        const prefsError = validateOnboardV1PreferencesBody(
+            body.preferences ?? {}
+        );
         if (prefsError) return res.status(400).json({ error: prefsError });
 
         const isLookingForRoommate =
